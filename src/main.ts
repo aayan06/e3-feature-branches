@@ -1,3 +1,12 @@
+// glasses.svg - "Eyeglasses Glasses" by SVG Repo
+// https://www.svgrepo.com/svg/296926/eyeglasses-glasses - CC0 license (public domain)
+// @deno-types="./asset-url.d.ts"
+import glassesUrl from "./assets/glasses.svg?no-inline";
+// bowtie.svg - "Bow Tie" by SVG Repo
+// https://www.svgrepo.com/svg/296885/bow-tie - CC0 license (public domain)
+// @deno-types="./asset-url.d.ts"
+import bowtieUrl from "./assets/bowtie.svg?no-inline";
+
 const portrait = document.querySelector<HTMLDivElement>("#portrait")!;
 const spin = document.querySelector<HTMLButtonElement>("#spin")!;
 
@@ -5,7 +14,10 @@ const spin = document.querySelector<HTMLButtonElement>("#spin")!;
 const face = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 face.setAttribute("viewBox", "0 0 200 200");
 face.setAttribute("role", "img");
-face.setAttribute("aria-label", "A neutral face");
+face.setAttribute(
+  "aria-label",
+  "A fancy old-timey face with glasses, rosy cheeks, and a bow tie",
+);
 
 const head = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
 head.setAttribute("cx", "100");
@@ -16,6 +28,20 @@ head.setAttribute("fill", "#f3cf87");
 head.setAttribute("stroke", "#302c29");
 head.setAttribute("stroke-width", "4");
 face.append(head);
+
+// pink cheeks so he looks a little cheerful under the glasses
+for (const cheekX of [58, 142]) {
+  const cheek = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "circle",
+  );
+  cheek.setAttribute("cx", cheekX.toString());
+  cheek.setAttribute("cy", "114");
+  cheek.setAttribute("r", "9");
+  cheek.setAttribute("fill", "#e8977a");
+  cheek.setAttribute("opacity", "0.5");
+  face.append(cheek);
+}
 
 const leftEye = document.createElementNS(
   "http://www.w3.org/2000/svg",
@@ -58,6 +84,24 @@ mouth.setAttribute("stroke", "#302c29");
 mouth.setAttribute("stroke-width", "4");
 mouth.setAttribute("stroke-linecap", "round");
 face.append(mouth);
+
+// glasses go after the eyes so they sit on top, centered on the eyes
+const glasses = document.createElementNS("http://www.w3.org/2000/svg", "image");
+glasses.setAttribute("href", glassesUrl);
+glasses.setAttribute("x", "45");
+glasses.setAttribute("y", "37");
+glasses.setAttribute("width", "110");
+glasses.setAttribute("height", "90");
+face.append(glasses);
+
+// bow tie at the bottom of the chin
+const bowtie = document.createElementNS("http://www.w3.org/2000/svg", "image");
+bowtie.setAttribute("href", bowtieUrl);
+bowtie.setAttribute("x", "75");
+bowtie.setAttribute("y", "158");
+bowtie.setAttribute("width", "50");
+bowtie.setAttribute("height", "50");
+face.append(bowtie);
 
 portrait.append(face);
 
