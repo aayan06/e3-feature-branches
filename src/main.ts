@@ -1,12 +1,47 @@
 const portrait = document.querySelector<HTMLDivElement>("#portrait")!;
 const spin = document.querySelector<HTMLButtonElement>("#spin")!;
 
-// builds the whole neutral face and hands it back
+// builds the whole sneaky face and hands it back
 function buildFace(): SVGSVGElement {
   const face = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   face.setAttribute("viewBox", "0 0 200 200");
   face.setAttribute("role", "img");
-  face.setAttribute("aria-label", "A neutral face");
+  face.setAttribute(
+    "aria-label",
+    "A sneaky face that fades from orange to purple with a crooked smirk",
+  );
+
+  // gradient for the head, orange at the top fading to purple at the bottom.
+  // it doesn't show up until something uses url(#head-fade)
+  const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+  const headFade = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "linearGradient",
+  );
+  headFade.setAttribute("id", "head-fade");
+  headFade.setAttribute("x1", "0%");
+  headFade.setAttribute("y1", "0%");
+  headFade.setAttribute("x2", "0%");
+  headFade.setAttribute("y2", "100%");
+
+  const topColor = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "stop",
+  );
+  topColor.setAttribute("offset", "0%");
+  topColor.setAttribute("stop-color", "#f7b267");
+  headFade.append(topColor);
+
+  const bottomColor = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "stop",
+  );
+  bottomColor.setAttribute("offset", "100%");
+  bottomColor.setAttribute("stop-color", "#b18bd6");
+  headFade.append(bottomColor);
+
+  defs.append(headFade);
+  face.append(defs);
 
   const head = document.createElementNS(
     "http://www.w3.org/2000/svg",
@@ -16,7 +51,7 @@ function buildFace(): SVGSVGElement {
   head.setAttribute("cy", "100");
   head.setAttribute("rx", "78");
   head.setAttribute("ry", "86");
-  head.setAttribute("fill", "#f3cf87");
+  head.setAttribute("fill", "url(#head-fade)");
   head.setAttribute("stroke", "#302c29");
   head.setAttribute("stroke-width", "4");
   face.append(head);
@@ -53,15 +88,15 @@ function buildFace(): SVGSVGElement {
   nose.setAttribute("stroke-linecap", "round");
   face.append(nose);
 
-  const mouth = document.createElementNS("http://www.w3.org/2000/svg", "line");
-  mouth.setAttribute("x1", "75");
-  mouth.setAttribute("y1", "137");
-  mouth.setAttribute("x2", "125");
-  mouth.setAttribute("y2", "137");
-  mouth.setAttribute("stroke", "#302c29");
-  mouth.setAttribute("stroke-width", "4");
-  mouth.setAttribute("stroke-linecap", "round");
-  face.append(mouth);
+  // crooked smirk instead of the flat mouth. starts low on the left,
+  // gets pulled down toward (108, 150), then ends up high on the right
+  const smirk = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  smirk.setAttribute("d", "M 76 138 Q 108 150 128 124");
+  smirk.setAttribute("fill", "none");
+  smirk.setAttribute("stroke", "#302c29");
+  smirk.setAttribute("stroke-width", "4");
+  smirk.setAttribute("stroke-linecap", "round");
+  face.append(smirk);
 
   return face;
 }
