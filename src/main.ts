@@ -5,7 +5,10 @@ const spin = document.querySelector<HTMLButtonElement>("#spin")!;
 const face = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 face.setAttribute("viewBox", "0 0 200 200");
 face.setAttribute("role", "img");
-face.setAttribute("aria-label", "A neutral face");
+face.setAttribute(
+  "aria-label",
+  "A grumpy face with heavy eyebrows and a big curly mustache",
+);
 
 const head = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
 head.setAttribute("cx", "100");
@@ -58,6 +61,44 @@ mouth.setAttribute("stroke", "#302c29");
 mouth.setAttribute("stroke-width", "4");
 mouth.setAttribute("stroke-linecap", "round");
 face.append(mouth);
+
+// one hair = one short line
+function hairLine(x1: number, y1: number, x2: number, y2: number) {
+  const hair = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  hair.setAttribute("x1", x1.toString());
+  hair.setAttribute("y1", y1.toString());
+  hair.setAttribute("x2", x2.toString());
+  hair.setAttribute("y2", y2.toString());
+  hair.setAttribute("stroke", "#302c29");
+  hair.setAttribute("stroke-width", "1.6");
+  hair.setAttribute("stroke-linecap", "round");
+  face.append(hair);
+}
+
+// small random nudge so hairs aren't perfectly lined up
+function wiggle(amount: number) {
+  return (Math.random() - 0.5) * amount;
+}
+
+// brows, right side is just the left one flipped
+for (let i = 0; i < 32; i++) {
+  const along = i / 31;
+  const bx = 56 + along * 32;
+  const by = 61 + along * 9 + wiggle(2);
+  const tipX = bx + 3 + wiggle(2);
+  const tipY = by - (5 + Math.random() * 3);
+  hairLine(bx, by, tipX, tipY);
+  hairLine(200 - bx, by, 200 - tipX, tipY);
+}
+
+// mustache, hairs lean out more the farther they are from the middle
+for (let i = 0; i < 48; i++) {
+  const mx = 71 + (i / 47) * 58;
+  const fromMid = mx - 100;
+  const my = 121 - 0.012 * fromMid * fromMid + wiggle(1.5);
+  const lean = fromMid * 0.08;
+  hairLine(mx, my, mx + lean + wiggle(2), my + 8 + Math.random() * 3);
+}
 
 portrait.append(face);
 
